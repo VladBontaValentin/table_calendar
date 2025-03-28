@@ -288,9 +288,12 @@ class _TableCalendarBaseState extends State<TableCalendarBase> {
       case CalendarFormat.week:
         return _getWeekCount(startDay, focusedDay);
       case CalendarFormat.day:
-        //The start day is equal to the focused day - as there is only one day presented
-        return 0;
+        return _getDayCount(startDay, focusedDay);
     }
+  }
+
+  int _getDayCount(DateTime first, DateTime last) {
+    return last.difference(_firstDayOfWeek(first)).inDays;
   }
 
   int _getMonthCount(DateTime first, DateTime last) {
