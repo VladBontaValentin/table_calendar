@@ -64,8 +64,11 @@ class CalendarCore extends StatelessWidget {
       itemBuilder: (context, index) {
         final baseDay = _getBaseDay(calendarFormat, index);
         final visibleRange = _getVisibleRange(calendarFormat, baseDay);
-        final visibleDays = _daysInRange(visibleRange.start, visibleRange.end);
-
+        List<DateTime> visibleDays =
+            _daysInRange(visibleRange.start, visibleRange.end);
+        if (calendarFormat == CalendarFormat.year) {
+          visibleDays = _yearsInRange(visibleRange.start, visibleRange.end);
+        }
         final actualDowHeight = dowVisible ? dowHeight! : 0.0;
         final constrainedRowHeight = constraints.hasBoundedHeight
             ? (constraints.maxHeight - actualDowHeight) /
@@ -78,6 +81,7 @@ class CalendarCore extends StatelessWidget {
         return CalendarPage(
           visibleDays: visibleDays,
           dowVisible: dowVisible,
+          calendarFormat: calendarFormat,
           dowDecoration: dowDecoration,
           rowDecoration: rowDecoration,
           tableBorder: tableBorder,
@@ -129,6 +133,8 @@ class CalendarCore extends StatelessWidget {
 
   int _getPageCount(CalendarFormat format, DateTime first, DateTime last) {
     switch (format) {
+      case CalendarFormat.year:
+        return _getYearCount(first, last) + 1;
       case CalendarFormat.month:
         return _getMonthCount(first, last) + 1;
       case CalendarFormat.twoWeeks:
@@ -138,6 +144,12 @@ class CalendarCore extends StatelessWidget {
       case CalendarFormat.day:
         return last.difference(first).inDays + 1;
     }
+  }
+
+  int _getYearCount(DateTime first, DateTime last) {
+    final yearDif = last.year - first.year;
+
+    return yearDif;
   }
 
   int _getMonthCount(DateTime first, DateTime last) {
@@ -168,8 +180,15 @@ class CalendarCore extends StatelessWidget {
     DateTime day;
 
     switch (format) {
+      case CalendarFormat.year:
+        day = DateTime.utc(
+          prevFocusedDay.year + pageDif,
+        );
       case CalendarFormat.month:
-        day = DateTime.utc(prevFocusedDay.year, prevFocusedDay.month + pageDif);
+        day = DateTime.utc(
+          prevFocusedDay.year,
+          prevFocusedDay.month + pageDif,
+        );
       case CalendarFormat.twoWeeks:
         day = DateTime.utc(
           prevFocusedDay.year,
@@ -203,6 +222,10 @@ class CalendarCore extends StatelessWidget {
     DateTime day;
 
     switch (format) {
+      case CalendarFormat.year:
+        day = DateTime.utc(
+          firstDay.year + pageIndex,
+        );
       case CalendarFormat.month:
         day = DateTime.utc(firstDay.year, firstDay.month + pageIndex);
       case CalendarFormat.twoWeeks:
@@ -236,6 +259,8 @@ class CalendarCore extends StatelessWidget {
 
   DateTimeRange _getVisibleRange(CalendarFormat format, DateTime focusedDay) {
     switch (format) {
+      case CalendarFormat.year:
+        return _daysInYear(focusedDay);
       case CalendarFormat.month:
         return _daysInMonth(focusedDay);
       case CalendarFormat.twoWeeks:
@@ -265,6 +290,13 @@ class CalendarCore extends StatelessWidget {
     return DateTimeRange(start: firstToDisplay, end: lastToDisplay);
   }
 
+  DateTimeRange _daysInYear(DateTime focusedDay) {
+    final daysBefore = _getDaysBefore(focusedDay);
+    final firstToDisplay = firstDay;
+    final lastToDisplay = lastDay;
+    return DateTimeRange(start: firstToDisplay, end: lastToDisplay);
+  }
+
   DateTimeRange _daysInMonth(DateTime focusedDay) {
     final first = _firstDayOfMonth(focusedDay);
     final daysBefore = _getDaysBefore(first);
@@ -286,6 +318,14 @@ class CalendarCore extends StatelessWidget {
     final dayCount = last.difference(first).inDays + 1;
     return List.generate(
       dayCount,
+      (index) => DateTime.utc(first.year, first.month, first.day + index),
+    );
+  }
+
+  List<DateTime> _yearsInRange(DateTime first, DateTime last) {
+    final int yearsCount = last.difference(first).inDays ~/ 365 + 1;
+    return List.generate(
+      yearsCount,
       (index) => DateTime.utc(first.year, first.month, first.day + index),
     );
   }

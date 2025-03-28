@@ -281,6 +281,8 @@ class _TableCalendarBaseState extends State<TableCalendarBase> {
     DateTime focusedDay,
   ) {
     switch (format) {
+      case CalendarFormat.year:
+        return _getYearCount(startDay, focusedDay);
       case CalendarFormat.month:
         return _getMonthCount(startDay, focusedDay);
       case CalendarFormat.twoWeeks:
@@ -301,6 +303,13 @@ class _TableCalendarBaseState extends State<TableCalendarBase> {
     final monthDif = last.month - first.month;
 
     return yearDif * 12 + monthDif;
+  }
+
+  int _getYearCount(DateTime first, DateTime last) {
+    final yearDif = last.year - first.year;
+    final monthDif = last.month - first.month;
+
+    return yearDif;
   }
 
   int _getWeekCount(DateTime first, DateTime last) {

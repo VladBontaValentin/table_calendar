@@ -2,11 +2,13 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import 'package:flutter/widgets.dart';
+import 'package:table_calendar/src/shared/utils.dart';
 
 class CalendarPage extends StatelessWidget {
   final Widget Function(BuildContext context, DateTime day)? dowBuilder;
   final Widget Function(BuildContext context, DateTime day) dayBuilder;
   final Widget Function(BuildContext context, DateTime day)? weekNumberBuilder;
+  final CalendarFormat calendarFormat;
   final List<DateTime> visibleDays;
   final Decoration? dowDecoration;
   final Decoration? rowDecoration;
@@ -21,6 +23,7 @@ class CalendarPage extends StatelessWidget {
     required this.visibleDays,
     this.dowBuilder,
     required this.dayBuilder,
+    required this.calendarFormat,
     this.weekNumberBuilder,
     this.dowDecoration,
     this.rowDecoration,
@@ -34,6 +37,9 @@ class CalendarPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (calendarFormat == CalendarFormat.year) {
+      return Container();
+    }
     return Padding(
       padding: tablePadding ?? EdgeInsets.zero,
       child: Row(
@@ -52,6 +58,11 @@ class CalendarPage extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  Widget _buildYearsNumbers(BuildContext context) {
+    final rowAmount = visibleDays.length;
+    return Container();
   }
 
   Widget _buildWeekNumbers(BuildContext context) {
