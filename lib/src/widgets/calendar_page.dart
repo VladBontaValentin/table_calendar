@@ -60,11 +60,6 @@ class CalendarPage extends StatelessWidget {
     );
   }
 
-  Widget _buildYearsNumbers(BuildContext context) {
-    final rowAmount = visibleDays.length;
-    return Container();
-  }
-
   Widget _buildWeekNumbers(BuildContext context) {
     final rowAmount = visibleDays.length ~/ 7;
 

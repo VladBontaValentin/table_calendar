@@ -12,6 +12,7 @@ import 'package:table_calendar/src/widgets/format_button.dart';
 class CalendarHeader extends StatelessWidget {
   final dynamic locale;
   final DateTime focusedMonth;
+  final DateTime? focusedDay;
   final CalendarFormat calendarFormat;
   final HeaderStyle headerStyle;
   final VoidCallback onLeftChevronTap;
@@ -26,6 +27,7 @@ class CalendarHeader extends StatelessWidget {
     super.key,
     this.locale,
     required this.focusedMonth,
+    this.focusedDay,
     required this.calendarFormat,
     required this.headerStyle,
     required this.onLeftChevronTap,
@@ -47,7 +49,7 @@ class CalendarHeader extends StatelessWidget {
                   )
                 : calendarFormat == CalendarFormat.day
                     ? DateFormat.MMMMd(locale).format(
-                        focusedMonth,
+                        focusedDay ?? focusedMonth,
                       )
                     : DateFormat.yMMMM(locale).format(focusedMonth));
 

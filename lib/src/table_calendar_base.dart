@@ -295,7 +295,7 @@ class _TableCalendarBaseState extends State<TableCalendarBase> {
   }
 
   int _getDayCount(DateTime first, DateTime last) {
-    return last.difference(_firstDayOfWeek(first)).inDays;
+    return last.difference(first).inDays;
   }
 
   int _getMonthCount(DateTime first, DateTime last) {
